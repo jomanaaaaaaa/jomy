@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love ❤️ | Will You Be My Valentine?</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #5a3d5c;
+            overflow-x: hidden;
+        }
+        
+        /* All screens hidden initially, we'll show them with JavaScript */
+        .screen {
+            display: none;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 30px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 8px solid #ff6b93;
+            animation: fadeIn 1s ease;
+        }
+        
+        /* Screen 1: Valentine Question */
+        .screen-1.active {
+            display: block;
+        }
+        
+        .screen-1 h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: #ff6b93;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .screen-1 p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            color: #666;
+        }
+        
+        .question-box {
+            background: linear-gradient(45deg, #fff0f3, #fff5f7);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 30px 0;
+            border: 3px dashed #ff6b93;
+        }
+        
+        .question-box h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #ff6b93;
+            margin-bottom: 20px;
+        }
+        
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .valentine-btn {
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 250px;
+            justify-content: center;
+        }
+        
+        .yes-btn {
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            color: white;
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        .yes-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(76, 175, 80, 0.4);
+        }
+        
+        .no-btn {
+            background: linear-gradient(to right, #ff6b6b, #ff5252);
+            color: white;
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+        
+        .no-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+        }
+        
+        /* Screen 2: Intermediate Waiting Page */
+        .screen-2.active {
+            display: block;
+        }
+        
+        .waiting-content {
+            padding: 30px;
+        }
+        
+        .waiting-content h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #ff6b93;
+            margin-bottom: 30px;
+        }
+        
+        .cute-message {
+            background: #fff5f7;
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+            border-left: 5px solid #ff6b93;
+            font-size: 1.3rem;
+            line-height: 1.8;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .cute-message p {
+            margin-bottom: 20px;
+        }
+        
+        .cute-message .heart-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #ff6b93;
+            margin: 20px 0;
+        }
+        
+        .photo-placeholder {
+            width: 100%;
+            max-width: 500px;
+            height: 350px;
+            margin: 30px auto;
+            background: linear-gradient(45deg, #ffafbd, #ffc3a0);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .photo-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .photo-placeholder p {
+            font-size: 1.2rem;
+            max-width: 80%;
+            text-align: center;
+        }
+        
+        .photo-placeholder::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        
+        .continue-btn {
+            background: linear-gradient(to right, #ff6b93, #ff8e53);
+            color: white;
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 20px rgba(255, 107, 147, 0.3);
+        }
+        
+        .continue-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 107, 147, 0.4);
+        }
+        
+        /* Screen 3: Main Website */
+        .screen-3.active {
+            display: block;
+            width: 100%;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            border: 8px solid #ff6b93;
+            position: relative;
+            animation: slideUp 1s ease;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #ff6b93, #ff8e53);
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        section {
+            margin-bottom: 50px;
+        }
+        
+        h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #ff6b93;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px dashed #ffc3a0;
+            padding-bottom: 10px;
+        }
+        
+        .message-box {
+            background: #fff5f7;
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ff6b93;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Photo Slider Styles */
+        .photo-slider {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+        }
+        
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+        
+        .slider-slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .slider-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .slide-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 107, 147, 0.85);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            color: #ff6b93;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .slider-nav:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .prev-btn {
+            left: 20px;
+        }
+        
+        .next-btn {
+            right: 20px;
+        }
+        
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ffc3a0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .dot.active {
+            background: #ff6b93;
+            transform: scale(1.2);
+        }
+        
+        .memory-timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-top: 30px;
+        }
+        
+        .memory-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #ffc3a0;
+            border-radius: 2px;
+        }
+        
+        .memory-item {
+            background: #fff9fb;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #ff8e53;
+        }
+        
+        .memory-item::before {
+            content: '';
+            position: absolute;
+            left: -38px;
+            top: 25px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ff6b93;
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px #ffc3a0;
+        }
+        
+        .memory-date {
+            font-weight: 600;
+            color: #ff6b93;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .love-count {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .love-count div {
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            min-width: 150px;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .love-count div i {
+            font-size: 2rem;
+            color: #ff6b93;
+            margin-bottom: 10px;
+        }
+        
+        .count-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ff6b93;
+        }
+        
+        .anniversary-section {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(45deg, #fff0f3, #fff5f7);
+            border-radius: 20px;
+            margin: 40px 0;
+            border: 2px solid #ff6b93;
+        }
+        
+        .anniversary-date {
+            font-size: 2rem;
+            color: #ff6b93;
+            font-weight: bold;
+            margin: 10px 0;
+            font-family: 'Dancing Script', cursive;
+        }
+        
+        .footer {
+            background: #fff5f7;
+            padding: 30px;
+            text-align: center;
+            border-top: 2px dashed #ffc3a0;
+        }
+        
+        .heart {
+            color: #ff6b93;
+            animation: heartbeat 1.5s infinite;
+            display: inline-block;
+            font-size: 2rem;
+            margin: 0 5px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes shine {
+            0% { transform: rotate(45deg) translateX(-100%); }
+            100% { transform: rotate(45deg) translateX(100%); }
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .floating-hearts span {
+            position: fixed;
+            font-size: 20px;
+            color: rgba(255, 107, 147, 0.6);
+            animation: float 5s infinite linear;
+            z-index: 0;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            .slider-container { height: 400px; }
+            .main-content { padding: 20px; }
+            .screen-1 h1 { font-size: 3rem; }
+            .question-box h2 { font-size: 2.5rem; }
+            .valentine-btn { min-width: 200px; padding: 15px 30px; }
+            .waiting-content h1 { font-size: 2.8rem; }
+            .photo-placeholder { height: 300px; }
+        }
+        
+        @media (max-width: 480px) {
+            .slider-container { height: 300px; }
+            .slider-nav { width: 40px; height: 40px; }
+            .buttons-container { flex-direction: column; align-items: center; }
+            .valentine-btn { width: 100%; max-width: 300px; }
+            .continue-btn { width: 100%; max-width: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts -->
+    <div class="floating-hearts">
+        <span style="left: 5%; animation-delay: 0s;">❤</span>
+        <span style="left: 15%; animation-delay: 1s;">♥</span>
+        <span style="left: 25%; animation-delay: 2s;">❤</span>
+        <span style="left: 75%; animation-delay: 3s;">♥</span>
+        <span style="left: 85%; animation-delay: 4s;">❤</span>
+    </div>
+    
+    <!-- SCREEN 1: Valentine Question -->
+    <div class="screen screen-1 active" id="screen1">
+        <h1>Hello My Love! 💝</h1>
+        <p>I have something special for you this Valentine's Day...</p>
+        
+        <div class="question-box">
+            <h2>Will You Be My Valentine? 💌</h2>
+            <p>This year, next year, and every year after...</p>
+            
+            <div class="buttons-container">
+                <button class="valentine-btn yes-btn" onclick="showScreen2()">
+                    <i class="fas fa-heart"></i>
+                    YES! I'LL BE YOUR VALENTINE
+                </button>
+                <button class="valentine-btn no-btn" onclick="showScreen2()">
+                    <i class="fas fa-heart"></i>
+                    YES! OF COURSE MY LOVE
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SCREEN 2: Intermediate Waiting Page -->
+    <div class="screen screen-2" id="screen2">
+        <div class="waiting-content">
+            <h1>Get Ready, My Love! 💕</h1>
+            
+            <div class="cute-message">
+                
+                <p class="heart-text">" Ba34a2k Ya Jomy"</p>
+
+                <p>Our Valentine's table is waiting just for you 7abibty. ❤️</p>
+                
+                
+                <p>**Wait here with me, in this beautiful moment before we reach our table... Don't click for our love letter just yet, let me walk you there first.**</p>
+                
+                
+            </div>
+            
+           <img src="/Users/johnmamdouh/Desktop/Jomy/Photos/IMG_8207.jpeg" alt="Our Valentine Table" 
+     style="width:100%; max-width:500px; border-radius:20px; 
+            margin:30px auto; display:block; 
+            box-shadow:0 10px 25px rgba(0,0,0,0.1);">
+            <button class="continue-btn" onclick="showScreen3()">
+                <i class="fas fa-arrow-right"></i>
+                Take Me to Our Love Letter
+            </button>
+        </div>
+    </div>
+    
+    <!-- SCREEN 3: Main Website -->
+    <div class="screen screen-3" id="screen3">
+        <div class="container">
+            <div class="header">
+                <h1>For My Valentine, <span id="gfName">Jomy</span> ❤️</h1>
+                <p class="subtitle">A digital love letter with all our memories</p>
+                <div style="margin-top: 20px; font-size: 1.5rem;">
+                    <span class="heart">♥</span>
+                    <span class="heart">♥</span>
+                    <span class="heart">♥</span>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <!-- Anniversary Celebration -->
+                <section class="anniversary-section">
+                    <h2>Our Love Journey</h2>
+                    <p>Celebrating our beautiful journey that began on:</p>
+                    <div class="anniversary-date" id="anniversaryDate">August 1, 2023</div>
+                    <p>We've been together for:</p>
+                    <div class="count-number" id="daysTogether">0</div>
+                    <p>amazing days and counting! 💖</p>
+                </section>
+                
+                <!-- Personal Message -->
+                <section>
+                    <h2>My Love Letter</h2>
+                    <div class="message-box">
+                        <p>My dearest <span id="gfName2">Jomy</span>,</p>
+                        <p style="margin: 15px 0;">From the moment we met, my life has been brighter, fuller, and more beautiful. Every day with you is a gift I love you more than you could ever know.</p>
+                        <p>This little website is a collection of our memories, our laughter, and the love that grows stronger with each passing day. I'm so grateful to have you by my side.</p>
+                        <p style="margin: 15px 0; font-size: 1.2rem; color: #ff6b93; text-align: center; font-family: 'Dancing Script', cursive;">
+                            Ba7ebk Awy Awy ya Jomy ❤️
+                        </p>
+                        <p style="margin-top: 15px; text-align: right; font-style: italic;">Forever yours,<br><strong>John</strong></p>
+                    </div>
+                </section>
+                <!-- Photo Slider -->
+<section>
+    <h2>Our Beautiful Memories</h2>
+    <p style="text-align: center; margin-bottom: 20px;">Swipe through our precious moments together</p>
+    
+    <div class="photo-slider">
+        <div class="slider-container">
+            <div class="slider-track" id="sliderTrack">
+                <!-- Slide 1 -->
+                <div class="slider-slide">
+                    <img src="/Users/johnmamdouh/Desktop/Jomy/Photos/IMG_1907.jpeg" alt="Our Beautiful Memory 1"
+                    style="max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 10px;">
+                    <div class="slide-caption">A7la Sora Atswrnaha ❤️</div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="slider-slide">
+                    <img src="/Users/johnmamdouh/Desktop/Jomy/Photos/IMG_1138.jpeg" alt="Our Beautiful Memory 2"
+                    style="max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 10px;">
+                    <div class="slide-caption">Bamot Feki ya a7la 🩷🩷</div>
+                </div>
+                
+                <!-- Slide 3 -->
+                <div class="slider-slide">
+                    <img src="/Users/johnmamdouh/Desktop/Jomy/Photos/IMG_1186.jpeg" alt="Our Beautiful Memory 3"
+                    style="max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 10px;">
+                    <div class="slide-caption">W Agmal 🤍🤍</div>
+                </div>
+                
+                <!-- Slide 4 -->
+                <div class="slider-slide">
+                    <img src="/Users/johnmamdouh/Desktop/Jomy/Photos/cbb061fe-c66e-4e98-9712-0765b400addc.jpeg" alt="Our Beautiful Memory 4"
+                    style="max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 10px;">>
+                    <div class="slide-caption">W Ara2 💘💘</div>
+                </div>
+                
+                <!-- Slide 5 -->
+                <div class="slider-slide">
+                    <img src="/Users/johnmamdouh/Desktop/Jomy/Photos/3c583514-c9b3-4c2f-b560-edf9d3870add.jpeg" alt="Our Beautiful Memory 5"
+                    style="max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 10px;">>
+                    <div class="slide-caption">w Amaz💝💝</div>
+                </div>
+                
+                <!-- Slide 6 -->
+                <div class="slider-slide">
+                    <img src="/Users/johnmamdouh/Desktop/Jomy/Photos/452ee1a0-486d-4615-8cc5-be03fab15762.jpeg" alt="Our Beautiful Memory 6"
+                    style="max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 10px;">>
+                    <div class="slide-caption">Banota FL Donia Kolha😘😘</div>
+                </div>
+                
+                <!-- Slide 7 -->
+                <div class="slider-slide">
+                    <img src="/Users/johnmamdouh/Desktop/Jomy/Photos/IMG_0147.jpeg" alt="Our Beautiful Memory 7"
+                    style="max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 10px;">>
+                    <div class="slide-caption">Happy Valentine's day y 7iaty kolha ♾️♥️♾️♥️♾️</div>
+                </div>
+                
+                <!-- Slide 8 -->
+                <div class="slider-slide">
+                    <img src="/Users/johnmamdouh/Desktop/Jomy/Photos/IMG_7072.jpeg" alt="Our Beautiful Memory 8"
+                    style="max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 10px;">>
+                    <div class="slide-caption">Forever in love with you 💕</div>
+                </div>
+            </div>
+            
+            <button class="slider-nav prev-btn" onclick="prevSlide()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="slider-nav next-btn" onclick="nextSlide()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        
+        <div class="slider-dots" id="sliderDots">
+            <!-- Dots will be generated by JavaScript -->
+        </div>
+    </div>
+</section>
+                <!-- Memory Timeline -->
+                <section>
+                    <h2>Our Love Timeline</h2>
+                    <div class="memory-timeline">  
+                        <div class="memory-item">
+                            <div class="memory-date">💕 30 March 2003</div>
+                            <p>This day will always be special to me — it’s the day my angel was born, the most beautiful girl in the whole world.</p>
+                        </div>
+
+                         <div class="memory-item">
+                            <div class="memory-date">📅 August 1, 2023</div>
+                            <p>Our anniversary! The day we officially became "us". Lsa Faker Azae kont khaef 22olk w ad eh kont mabsot ba3dha</p>
+                        </div>
+                        
+                        <div class="memory-item">
+                            <div class="memory-date">⭐ December 25, 2023</div>
+                            <p>Our first Christmas together. The best gift I received was waking up next to you. Soret Swabe3na😂😂</p>
+                        </div>
+                        
+                        <div class="memory-item">
+                            <div class="memory-date">🎉 February 14, 2024</div>
+                            <p>Our first Valentine's Day. I've never felt so much love for one person.</p>
+                        </div>
+                        
+                        <div class="memory-item">
+                            <div class="memory-date">🌈 August 1, 2024</div>
+                            <p>Our 1st anniversary! A whole year of love, laughter, and beautiful memories.</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Love Stats -->
+                <section>
+                    <h2>By The Numbers</h2>
+                    <div class="love-count">
+                        <div>
+                            <i class="fas fa-calendar-heart"></i>
+                            <div class="count-number" id="daysTogether2">0</div>
+                            <p>Days Together</p>
+                        </div>
+                        
+                        <div>
+                            <i class="fas fa-kiss-beam"></i>
+                            <div class="count-number">∞</div>
+                            <p>Hafdal A7ebk 3latol l7ad ma nb2a teta w gedo</p>
+                        </div>
+                        
+                        <div>
+                            <i class="fas fa-infinity"></i>
+                            <div class="count-number">Infinite</div>
+                            <p>Upcoming Days</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="footer">
+                <p style="font-size: 1.2rem; margin-bottom: 15px;">Thank you for being my Valentine, today and every day.</p>
+                <p>Made with <span class="heart">♥</span> by John for the most amazing person in my life</p>
+                <p style="margin-top: 20px; font-family: 'Dancing Script', cursive; font-size: 1.5rem;">
+                    Forever your Valentine
+                </p>
+                <div style="margin-top: 20px; font-size: 2rem;">
+                    <span class="heart">❤</span>
+                    <span class="heart">️💖</span>
+                    <span class="heart">💗</span>
+                    <span class="heart">💓</span>
+                    <span class="heart">💞</span>
+                </div>
+                <p style="margin-top: 20px; font-size: 0.9rem; color: #888;">
+                    &copy; 2026 - Made with love for Jomy
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CUSTOMIZE THESE VALUES
+        const girlfriendName = "Jomy";          // ← Her name
+        const yourName = "John";               // ← Your name
+        const anniversaryDate = "2023-08-01";  // ← Your anniversary date (YYYY-MM-DD)
+        
+        // Photo Slider Configuration
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slider-slide');
+        const totalSlides = slides.length;
+        
+        // Screen Navigation
+        function showScreen2() {
+            // Hide screen 1, show screen 2
+            document.getElementById('screen1').classList.remove('active');
+            document.getElementById('screen2').classList.add('active');
+            
+            // Add more floating hearts for transition
+            for(let i = 0; i < 20; i++) {
+                const heart = document.createElement('span');
+                heart.innerHTML = '💖';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 3 + 's';
+                heart.style.fontSize = (Math.random() * 25 + 20) + 'px';
+                heart.style.color = '#ff6b93';
+                document.querySelector('.floating-hearts').appendChild(heart);
+            }
+        }
+        
+        function showScreen3() {
+            // Hide screen 2, show screen 3 (main website)
+            document.getElementById('screen2').classList.remove('active');
+            document.getElementById('screen3').classList.add('active');
+            
+            // Initialize the main website
+            initializeWebsite();
+            
+            // Create celebration hearts
+            for(let i = 0; i < 50; i++) {
+                const heart = document.createElement('span');
+                heart.innerHTML = '❤';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                heart.style.color = '#ff6b93';
+                document.querySelector('.floating-hearts').appendChild(heart);
+            }
+        }
+        
+        // Calculate days from anniversary
+        function calculateDaysFromAnniversary() {
+            const startDate = new Date(anniversaryDate);
+            const today = new Date();
+            const diffTime = today - startDate;
+            return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        }
+        
+        // Format anniversary date for display
+        function formatAnniversaryDate() {
+            const date = new Date(anniversaryDate);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+        
+        // Initialize slider
+        function initSlider() {
+            const sliderDots = document.getElementById('sliderDots');
+            
+            // Create dots
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(i));
+                sliderDots.appendChild(dot);
+            }
+            
+            // Auto slide every 5 seconds
+            setInterval(() => {
+                nextSlide();
+            }, 5000);
+        }
+        
+        // Go to specific slide
+        function goToSlide(slideIndex) {
+            const track = document.getElementById('sliderTrack');
+            const dots = document.querySelectorAll('.dot');
+            
+            currentSlide = slideIndex;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update dots
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+        
+        // Next slide
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            goToSlide(currentSlide);
+        }
+        
+        // Previous slide
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            goToSlide(currentSlide);
+        }
+        
+        // Initialize the main website
+        function initializeWebsite() {
+            const daysTogether = calculateDaysFromAnniversary();
+            const formattedAnniversary = formatAnniversaryDate();
+            
+            // Update names
+            document.querySelectorAll('#gfName, #gfName2').forEach(el => {
+                el.textContent = girlfriendName;
+            });
+            
+            // Update your name
+            document.querySelectorAll('strong').forEach(el => {
+                if(el.textContent.includes('John') || el.textContent.includes('Alex')) {
+                    el.textContent = yourName;
+                }
+            });
+            
+            // Update anniversary date
+            document.getElementById('anniversaryDate').textContent = formattedAnniversary;
+            
+            // Update days together in both places
+            document.getElementById('daysTogether').textContent = daysTogether;
+            document.getElementById('daysTogether2').textContent = daysTogether;
+            
+            // Initialize slider
+            initSlider();
+            
+            // Make hearts clickable
+            document.querySelectorAll('.heart').forEach(heart => {
+                heart.addEventListener('click', function() {
+                    this.style.color = this.style.color === 'gold' ? '#ff6b93' : 'gold';
+                });
+            });
+        }
+        
+        // Initial floating hearts creation
+        for(let i = 0; i < 10; i++) {
+            const heart = document.createElement('span');
+            heart.innerHTML = Math.random() > 0.5 ? '❤' : '♥';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            document.querySelector('.floating-hearts').appendChild(heart);
+        }
+        
+        // Both buttons go to screen 2
+        document.querySelectorAll('.valentine-btn').forEach(btn => {
+            btn.addEventListener('click', showScreen2);
+        });
+    </script>
+</body>
+</html>
